@@ -1,1 +1,565 @@
 
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AM Operational Review</title>
+
+<style>
+:root {
+  --bg: #070b14;
+  --panel: #101827;
+  --text: #f4f7fb;
+  --muted: #9aa9bf;
+  --cyan: #5ce1e6;
+  --blue: #648cff;
+  --green: #4ade80;
+  --amber: #fbbf24;
+  --red: #fb7185;
+  --line: #27354a;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background:
+    radial-gradient(ellipse at 15% 10%, #14243c, transparent 42%),
+    #070b14;
+  color: var(--text);
+  font-family: Inter, Arial, sans-serif;
+}
+
+button {
+  cursor: pointer;
+  font: inherit;
+}
+
+.topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 14px 22px;
+  background: #080d17;
+  border-bottom: 1px solid var(--line);
+}
+
+.brand {
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 2px;
+}
+
+.btn {
+  padding: 10px 14px;
+  border: 1px solid #34435a;
+  border-radius: 10px;
+  background: #131d2d;
+  color: white;
+  font-size: 12px;
+  font-weight: bold;
+}
+
+.btn:hover {
+  border-color: var(--cyan);
+}
+
+.btn.primary {
+  background: var(--cyan);
+  color: #06121b;
+}
+
+.stage {
+  padding: 24px;
+  display: grid;
+  place-items: center;
+  min-height: calc(100vh - 130px);
+}
+
+.slide {
+  display: none;
+  width: 100%;
+  max-width: 1240px;
+  min-height: 650px;
+  padding: clamp(24px, 5vw, 60px);
+  border: 1px solid var(--line);
+  border-radius: 20px;
+  background: linear-gradient(
+    140deg,
+    #131f31,
+    #080e19 75%
+  );
+  box-shadow: 0 30px 100px #0008;
+}
+
+.slide.active {
+  display: flex;
+  flex-direction: column;
+}
+
+.kicker {
+  margin-bottom: 18px;
+  color: var(--cyan);
+  font-size: 11px;
+  font-weight: bold;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+}
+
+h1 {
+  margin: 0 0 20px;
+  font-size: clamp(38px, 6vw, 76px);
+  line-height: 1.05;
+  letter-spacing: -3px;
+}
+
+h1 span {
+  color: var(--cyan);
+}
+
+h2 {
+  margin: 0 0 14px;
+  font-size: clamp(28px, 4vw, 46px);
+}
+
+h3 {
+  margin-top: 0;
+  font-size: 15px;
+}
+
+p {
+  color: var(--muted);
+  line-height: 1.7;
+}
+
+.lead {
+  max-width: 700px;
+  font-size: 18px;
+}
+
+.pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 30px;
+}
+
+.pill {
+  padding: 9px 13px;
+  border: 1px solid #34445a;
+  border-radius: 30px;
+  color: #cbd5e1;
+  font-size: 11px;
+}
+
+.grid {
+  display: grid;
+  gap: 15px;
+}
+
+.kpi-grid {
+  grid-template-columns: repeat(4, 1fr);
+  margin: 25px 0;
+}
+
+.card {
+  padding: 20px;
+  border: 1px solid var(--line);
+  border-radius: 15px;
+  background: #111c2dcc;
+}
+
+.metric-label {
+  color: var(--muted);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.metric {
+  margin: 14px 0 8px;
+  font-size: clamp(24px, 3vw, 38px);
+  font-weight: 800;
+}
+
+.metric small {
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.good {
+  color: var(--green);
+}
+
+.warning {
+  color: var(--amber);
+}
+
+.danger {
+  color: var(--red);
+}
+
+.two-col {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.bar-row {
+  display: grid;
+  grid-template-columns: 100px 1fr 50px;
+  gap: 10px;
+  align-items: center;
+  margin: 18px 0;
+  font-size: 12px;
+}
+
+.bar-track {
+  height: 9px;
+  overflow: hidden;
+  border-radius: 20px;
+  background: #253248;
+}
+
+.bar-fill {
+  height: 100%;
+  border-radius: 20px;
+  background: linear-gradient(
+    90deg,
+    var(--blue),
+    var(--cyan)
+  );
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th,
+td {
+  padding: 14px;
+  border-bottom: 1px solid var(--line);
+  text-align: left;
+  font-size: 12px;
+}
+
+th {
+  color: var(--muted);
+  background: #121d2e;
+  text-transform: uppercase;
+}
+
+.status {
+  display: inline-block;
+  padding: 6px 9px;
+  border-radius: 20px;
+  font-size: 10px;
+  font-weight: bold;
+}
+
+.status.good {
+  background: #123324;
+}
+
+.status.warning {
+  background: #382b13;
+}
+
+.status.danger {
+  background: #3b1b28;
+}
+
+.slide-footer {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: auto;
+  padding-top: 25px;
+  color: #73839b;
+  font-size: 10px;
+  letter-spacing: 1px;
+}
+
+.nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 15px 22px;
+  background: #080d17;
+  border-top: 1px solid var(--line);
+}
+
+.counter {
+  color: #b8c5d8;
+  font-size: 12px;
+}
+
+.progress {
+  height: 3px;
+  background: #1b2638;
+}
+
+.progress-fill {
+  height: 100%;
+  width: 0;
+  background: linear-gradient(
+    90deg,
+    var(--blue),
+    var(--cyan)
+  );
+  transition: width .25s;
+}
+
+@media (max-width: 800px) {
+  .topbar,
+  .nav {
+    padding: 12px;
+  }
+
+  .stage {
+    padding: 10px;
+  }
+
+  .slide {
+    min-height: 75vh;
+    padding: 24px 18px;
+    border-radius: 14px;
+  }
+
+  .kpi-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 9px;
+  }
+
+  .two-col {
+    grid-template-columns: 1fr;
+  }
+
+  .card {
+    padding: 14px;
+  }
+
+  .metric {
+    font-size: 25px;
+  }
+
+  table {
+    min-width: 550px;
+  }
+
+  .table-wrap {
+    overflow-x: auto;
+  }
+}
+
+@media print {
+  .topbar,
+  .nav,
+  .progress {
+    display: none;
+  }
+
+  .slide,
+  .slide.active {
+    display: flex !important;
+    min-height: 100vh;
+    page-break-after: always;
+    print-color-adjust: exact;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<div class="topbar">
+  <div class="brand">AM · OPERATIONAL REVIEW</div>
+
+  <div>
+    <button class="btn" onclick="editMaterial()">
+      Edit Materi
+    </button>
+
+    <button class="btn" onclick="window.print()">
+      PDF / Cetak
+    </button>
+
+    <button class="btn primary" onclick="toggleFullscreen()">
+      Fullscreen
+    </button>
+  </div>
+</div>
+
+<div class="stage" id="stage">
+
+  <!-- SLIDE 1: COVER -->
+  <section class="slide active" data-title="Cover">
+    <div class="kicker">Monthly Operational Review</div>
+
+    <h1>
+      Operational<br>
+      <span>Performance</span><br>
+      Review
+    </h1>
+
+    <p class="lead">
+      Evaluasi kinerja area, pencapaian KPI,
+      dan prioritas perbaikan operasional store.
+    </p>
+
+    <div class="pills">
+      <span class="pill">AREA MANAGER</span>
+      <span class="pill">OKTOBER 2026</span>
+      <span class="pill">INTERNAL REVIEW</span>
+    </div>
+
+    <div class="slide-footer">
+      <span>BUSINESS · PEOPLE · PRODUCT · PROCESS</span>
+      <span>01</span>
+    </div>
+  </section>
+
+  <!-- SLIDE 2: EXECUTIVE SUMMARY -->
+  <section class="slide" data-title="Executive Summary">
+    <div class="kicker">01 · Executive Summary</div>
+
+    <h2>Ringkasan Kinerja Area</h2>
+
+    <p>
+      Gambaran pencapaian KPI dan prioritas perbaikan area.
+    </p>
+
+    <div class="grid kpi-grid">
+      <div class="card">
+        <div class="metric-label">Sales MTD</div>
+        <div class="metric">Rp 1,24 <small>M</small></div>
+        <div class="good">+8,4% vs periode lalu</div>
+      </div>
+
+      <div class="card">
+        <div class="metric-label">Target Sales</div>
+        <div class="metric">92,6<small>%</small></div>
+        <div class="warning">Gap 7,4%</div>
+      </div>
+
+      <div class="card">
+        <div class="metric-label">Food Cost</div>
+        <div class="metric">31,8<small>%</small></div>
+        <div class="good">Target ≤ 32%</div>
+      </div>
+
+      <div class="card">
+        <div class="metric-label">Audit Score</div>
+        <div class="metric">88<small>/100</small></div>
+        <div class="warning">Perlu follow-up</div>
+      </div>
+    </div>
+
+    <div class="grid two-col">
+      <div class="card">
+        <h3>Key Findings</h3>
+        <p>Sales tumbuh tetapi target belum tercapai.</p>
+        <p>Kontrol food cost harus dipertahankan.</p>
+        <p>Temuan operasional perlu closing terverifikasi.</p>
+      </div>
+
+      <div class="card">
+        <h3>Prioritas Area</h3>
+        <p>01 · Sales recovery.</p>
+        <p>02 · Product dan stock control.</p>
+        <p>03 · Manpower productivity.</p>
+      </div>
+    </div>
+
+    <div class="slide-footer">
+      <span>AREA PERFORMANCE</span>
+      <span>02</span>
+    </div>
+  </section>
+
+  <!-- SLIDE 3: SALES PERFORMANCE -->
+  <section class="slide" data-title="Sales Performance">
+    <div class="kicker">02 · Sales Performance</div>
+
+    <h2>Sales vs Target</h2>
+
+    <p>
+      Contoh pencapaian MTD setiap store.
+    </p>
+
+    <div class="card">
+      <h3>Pencapaian Sales per Store</h3>
+
+      <div class="bar-row">
+        <span>SSS Menteng</span>
+        <div class="bar-track">
+          <div class="bar-fill" style="width:96%"></div>
+        </div>
+        <strong>96%</strong>
+      </div>
+
+      <div class="bar-row">
+        <span>SKS Citywalk</span>
+        <div class="bar-track">
+          <div class="bar-fill" style="width:89%"></div>
+        </div>
+        <strong>89%</strong>
+      </div>
+
+      <div class="bar-row">
+        <span>SS Citra Tower</span>
+        <div class="bar-track">
+          <div class="bar-fill" style="width:93%"></div>
+        </div>
+        <strong>93%</strong>
+      </div>
+    </div>
+
+    <div class="grid two-col" style="margin-top:15px">
+      <div class="card">
+        <h3>Analisis</h3>
+        <p>Identifikasi store dengan gap sales terbesar.</p>
+        <p>Bandingkan weekday dan weekend.</p>
+      </div>
+
+      <div class="card">
+        <h3>Action Plan</h3>
+        <p>Daily sales monitoring.</p>
+        <p>Upselling dan evaluasi produktivitas.</p>
+      </div>
+    </div>
+
+    <div class="slide-footer">
+      <span>SALES · TARGET · GROWTH</span>
+      <span>03</span>
+    </div>
+  </section>
+
+  <!-- LANJUTKAN SLIDE 4–9 DAN JAVASCRIPT PADA BAGIAN BERIKUTNYA -->
+
+</div>
+
+<div class="progress">
+  <div class="progress-fill" id="progressFill"></div>
+</div>
+
+<div class="nav">
+  <button class="btn" onclick="prevSlide()">← Previous</button>
+
+  <span class="counter" id="counter">01 / 03</span>
+
+  <button class="btn primary" onclick="nextSlide()">Next →</button>
+</div>
+
+<script>
+/* JavaScript navigasi akan dilengkapi pada bagian berikutnya */
+</script>
+
+</body>
+</html>
+
